@@ -31,8 +31,10 @@ class Portfolio:
 
     def addcash(self, cash):
         self.c += cash
+        self.h.append(["Cash", "Add", cash])
     def withdrawCash(self,cash):
         self.c += -cash
+        self.h.append(["Cash", "Withdraw", cash])
 
     def buyStock(self, amount, stockname):
 
