@@ -10,21 +10,19 @@ class Portfolio:
         self.mf = {}
         self.b = {}
         self.h = []
+### c for cash, s for stock, mf for mutual fund, b for bonds and h for history.
 
     def __str__(self):
         result = ""
-        dict = self.s
         for st in self.s:
-            result += str(dict.get(st)) + " " + st + " shares \n"
+            result += str(self.s.get(st)) + " " + st + " shares \n"
         result2 = ""
-        dict = self.mf
-        for mf in dict:
-            result2 += str(dict.get(mf)) + " " + mf + " funds shares \n"
+        for mf in self.mf:
+            result2 += str(self.mf.get(mf)) + " " + mf + " funds shares \n"
         result3 = ""
-        dict = self.b
-        for b in dict:
-            result3 += str(dict.get(b)) +" " + b +" bonds\n"
-        return "cash: " + str(self.c ) + " \nStocks: " + result + "Mutualfunds: " + result2 + "Bonds: " + result3
+        for b in self.b:
+            result3 += str(self.b.get(b)) +" " + b +" bonds\n"
+        return "Portfolio has:\ncash: " + str(self.c ) + " \nStocks: " + result + "Mutualfunds: " + result2 + "Bonds: " + result3
 
     def __repr__(self):
         return self.__str__()
@@ -32,9 +30,13 @@ class Portfolio:
     def addcash(self, cash):
         self.c += cash
         self.h.append(["Cash", "Add", cash])
+
     def withdrawCash(self,cash):
-        self.c += -cash
-        self.h.append(["Cash", "Withdraw", cash])
+        if cash< self.c:
+            self.c += -cash
+            self.h.append(["Cash", "Withdraw", cash])
+        else:
+            print("Portfolio only has "+ str(self.c) +"dollars.")
 
     def buyStock(self, amount, stockname):
 
@@ -50,16 +52,24 @@ class Portfolio:
 
     def sellStock(self, amount, stockname):
         stocks = self.s
-        self.h.append(["Stock", "Sell", amount,stockname.t])
-        self.c += (amount * stockname.p * (random.uniform(0.5,1.5)))
-        amount = stocks[stockname.t] - amount
-        stocks.update({stockname.t: amount})
+        if stocks.get(stockname.t)>= amount:
+            self.h.append(["Stock", "Sell", amount, stockname.t])
+            self.c += (amount * stockname.p * (random.uniform(0.5,1.5)))
+            amount = stocks[stockname.t] - amount
+            stocks.update({stockname.t: amount})
+        else: print("The Portfolio does not have such stocks")
         self.s = stocks
 
     def history(self):
         print("History of Transactions follows, ordered chronologically")
+        a=1
         for item in self.h:
-            print(item)
+            print(str(a), end="- ")
+            for i in item:
+                print(i, end=":")
+            print("\n")
+            a+=1
+
 
     def buyMutualFund(self, amount, mutualfund):
         funds = self.mf
@@ -72,20 +82,24 @@ class Portfolio:
             funds.update({mutualfund.t: amount})
             self.mf = funds
 
-    def sellMutualFund(self, amount, mutualfund):
+    def sellMutualFund(self, amount, mfund):
         funds = self.mf
-        self.h.append(["Mutual Fund", "Sell", amount, mutualfund.t])
-        self.c += (amount*mutualfund.p * (random.uniform(0.9,1.2)))
-        amount = funds[mutualfund.t] - amount
-        funds.update({mutualfund.t: amount})
+        if funds.get(mfund.t)>=amount:
+            self.h.append(["Mutual Fund", "Sell", amount, mfund.t])
+            self.c += (amount * mfund.p * (random.uniform(0.9,1.2)))
+            amount = funds[mfund.t] - amount
+            funds.update({mfund.t: amount})
+        else: print("The Portfolio does not have such mutual fund shares")
         self.mf = funds
 
     def sellBonds(self,bond, amount):
         bonds=self.b
-        self.h.append(["Bond",-amount,bonds.t])
-        self.c += +(amount * bond.p * (random.uniform(0.9,1.2)))
-        amount = bonds[bond.t] - amount
-        bonds.update({bond.t: amount})
+        if bonds.get(bond.t)>=amount:
+            self.h.append(["Bond",-amount,bonds.t])
+            self.c += +(amount * bond.p * (random.uniform(0.9,1.2)))
+            amount = bonds[bond.t] - amount
+            bonds.update({bond.t: amount})
+        else: print("The Portfolio does not have such bonds")
         self.b = bonds
 
 
@@ -115,6 +129,10 @@ portfolio.buyMutualFund(2, mf2)
 print(portfolio)
 portfolio.history()
 portfolio.sellMutualFund(3,mf1) #Sells 3 shares of BRT
+portfolio.sellMutualFund(12,mf1)
 portfolio.sellStock(1, s) #Sells 1 share of HFH
-portfolio.withdrawCash(50) #Removes $50
+portfolio.withdrawCash(250)
+portfolio.withdrawCash(50)#Removes $50
 portfolio.history() #Prints a list of all transactions
+
+print(portfolio)
