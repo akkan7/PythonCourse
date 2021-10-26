@@ -39,12 +39,13 @@ class Portfolio:
             print("Portfolio only has "+ str(self.c) +"dollars.")
 
     def buyStock(self, amount, stockname):
-
+### I assign self.s to stocks to reduce the complex representation, then reassign it to the portfolio attribute.
+###same logic applies in other functions
         stocks = self.s
         if self.c >= amount * stockname.p and amount % 1==0:
             if stockname.t not in stocks:
                 stocks[stockname.t] = 0
-            self.h.append(["Stock", "Buy", amount, stockname.t])
+            self.h.append(["Stock", "Buy", amount, stockname.t, amount*stockname.p])
             self.c += -(amount*stockname.p)
             amount += stocks[stockname.t]
             stocks.update({stockname.t: amount})
@@ -53,41 +54,44 @@ class Portfolio:
     def sellStock(self, amount, stockname):
         stocks = self.s
         if stocks.get(stockname.t)>= amount:
-            self.h.append(["Stock", "Sell", amount, stockname.t])
-            self.c += (amount * stockname.p * (random.uniform(0.5,1.5)))
+            money = (amount * stockname.p * (random.uniform(0.5,1.5)))
+            self.c+= money
+            self.h.append(["Stock", "Sell", amount, stockname.t, money])
             amount = stocks[stockname.t] - amount
             stocks.update({stockname.t: amount})
         else: print("The Portfolio does not have such stocks")
         self.s = stocks
 
     def history(self):
-        print("History of Transactions follows, ordered chronologically")
+        print("\nHistory of Transactions follows, ordered chronologically")
+        print("Type: Action: Amount: Symbol: Cash equivalent")
         a=1
         for item in self.h:
             print(str(a), end="- ")
             for i in item:
-                print(i, end=":")
+                print(i, end="  ")
             print("\n")
             a+=1
+#for loop to make history of transactions more esthetic
 
-
-    def buyMutualFund(self, amount, mutualfund):
+    def buyMutualFund(self, amount, mfund):
         funds = self.mf
-        if amount*mutualfund.p <= self.c:
-            if mutualfund.t not in funds:
-                funds[mutualfund.t] = 0
-            self.h.append(["Mutual Fund","Buy",amount, mutualfund.t])
-            self.c += -(amount*mutualfund.p)
-            amount = funds[mutualfund.t]+amount
-            funds.update({mutualfund.t: amount})
+        if amount*mfund.p <= self.c:
+            if mfund.t not in funds:
+                funds[mfund.t] = 0
+            self.h.append(["Mutual Fund","Buy",amount, mfund.t, amount*mfund.p ])
+            self.c += -(amount*mfund.p)
+            amount = funds[mfund.t]+amount
+            funds.update({mfund.t: amount})
             self.mf = funds
 
     def sellMutualFund(self, amount, mfund):
         funds = self.mf
         if funds.get(mfund.t)>=amount:
-            self.h.append(["Mutual Fund", "Sell", amount, mfund.t])
-            self.c += (amount * mfund.p * (random.uniform(0.9,1.2)))
+            money = (amount * mfund.p * (random.uniform(0.9,1.2)))
+            self.c += money
             amount = funds[mfund.t] - amount
+            self.h.append(["Mutual Fund", "Sell", amount, mfund.t, money])
             funds.update({mfund.t: amount})
         else: print("The Portfolio does not have such mutual fund shares")
         self.mf = funds
