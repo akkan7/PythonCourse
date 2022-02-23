@@ -26,7 +26,7 @@ def download_data(from_symbol, to_symbol, exchange, datetime_interval):
 
     #print('Downloading 'minute' trading data for 'BTC''USD' from 'Bitstamp')
     base_url = 'https://min-api.cryptocompare.com/data/histo'
-    url = 'https://min-api.cryptocompare.com/data/v2/histohour?api_key=0545b9c46908c68d7722152f9bbfae7b53e6c5f720b64a2fa238b94e2bbddb15'
+    url = 'https://min-api.cryptocompare.com/data/v2/histohour?api_key='
     #% (base_url, datetime_interval)
     params = {'fsym': from_symbol, 'tsym': to_symbol, 'limit': 719, 'aggregate': 1, 'toTs':timestamp}
     request = requests.get(url, params=params)
